@@ -1,35 +1,10 @@
 from gpiozero import DistanceSensor, LED
 from smbus2 import SMBus
 from mlx90614 import MLX90614
-from signal import pause
-from time import sleep
-from nio import AsyncClient
+from time import sleep, time
 import asyncio
-
-async def matrix_login(server, user, password, device_id=None):
-    if device_id:
-        client = AsyncClient(server, user, device_id)
-    else:
-        client = AsyncClient(server, user)
-    await client.login(password)
-    return client
-
-
-async def matrix_get_room_id(client, room_name):
-    response = await client.room_resolve_alias(room_name)
-    room_id = response.room_id
-    return room_id
-
-async def send_message(client, room_id, message):
-    await client.room_send(
-        room_id=room_id,
-        message_type="m.room.message",
-        content={
-            "body": message,
-            "msgtype": "m.text"
-        }
-    )
-    
+import matrix_functions as mx
+import functions as fc
 
 
 async def main():
@@ -38,49 +13,67 @@ async def main():
     bus = SMBus(1)
     temp_sensor = MLX90614(bus, address=0x5A)
 
-    dist_sensor = DistanceSensor(echo=27, trigger=22, threshold_distance=0.1)
-    led = LED(23)
-    
+    dist_sensor = DistanceSensor(
+        echo=27, trigger=22, threshold_distance=0.2)
+    led_blue = LED(23)
+    led_yellow = LED(24)
+    led_green = LED(25)
     good_temp_flag = True
-    
+    temp_offset = 1.8
+
     server = 'https://matrix-client.matrix.org'
     user = '@tavo9:matrix.org'
     password = 'O1KhpTBn7D47'
     room = '#temper:matrix.org'
     device_id = 'QXWVUANCNW'
-    
-    client = await matrix_login(server, user, password, device_id)
-    room_id = await matrix_get_room_id(client, room)
-    
-    while True:
-        # print(dist_sensor.distance)
+
+    client_task = asyncio.create_task(
+        mx.matrix_login(server, user, password, device_id))
+    client = await client_task
+
+    room_id_task = asyncio.create_task(
+        mx.matrix_get_room_id(client, room))
+    room_id = await room_id_task
+
+    yellow_time = time()
+    YELLOW_TIME_INTERVAL = 3
+    while True:     
         sleep(0.3)
         if dist_sensor.distance < dist_sensor.threshold_distance:
             if len(data) != 5:
-                # print(dist_sensor.distance)
-                led.on()
                 data.add(temp_sensor.get_object_1())
-                # sleep(0.5)
                 print(f'Dato {len(data)}/5')
                 good_temp_flag = False
+                led_blue.on()
+                led_yellow.off()
+                led_green.off()  
             elif not good_temp_flag:
-                avg_temp = round(sum(data)/len(data),2)
+                avg_temp = round(sum(data)/len(data), 2)
+                avg_temp += temp_offset
                 good_temp_flag = True
                 msg = f'La temperatura es: {avg_temp}, puede retirar la mano'
                 print(msg)
-                await send_message(client,room_id,str(avg_temp))
-                led.off()
+                await mx.matrix_send_message(client, room_id, str(avg_temp))
+                led_green.on()
+                led_blue.off()
+                led_yellow.off()
             continue
         elif not good_temp_flag:
             print('Superficie retirada, toma de temperatura detenida')
             good_temp_flag = True
-            
-        led.off()
+            led_yellow.on()
+            yellow_time = time()  
+        led_blue.off()
+        led_green.off() 
         data.clear()
-            
+        
+        if fc.has_time_passed(yellow_time, YELLOW_TIME_INTERVAL):
+            led_yellow.off()
+
 
 if __name__ == '__main__':
-    asyncio.run(main())            
+    asyncio.run(main())
+
 
 # dist_sensor.when_in_range = get_temp
 # dist_sensor.when_out_of_range = no_temp
