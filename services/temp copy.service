@@ -1,0 +1,16 @@
+[Unit]
+Description = Door Matrix Controller Python    
+After = network.target
+[Service]
+Type = simple
+WorkingDirectory= </path/to/project/>
+ExecStart = </path/to/project>/venv/bin/python3.9 door_control.py 
+User = root              
+Group = root               
+Restart =on-failure 
+SyslogIdentifier = test                          
+RestartSec = 5
+TimeoutStartSec = infinity
+Environment=PYTHONUNBUFFERED=1 
+[Install]
+WantedBy = multi-user.target

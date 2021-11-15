@@ -1,0 +1,16 @@
+[Unit]
+Description = Speaker Matrix Controller Python    
+After = network.target
+[Service]
+Type = simple
+WorkingDirectory= </path/to/project/>
+ExecStart = </path/to/project>/venv/bin/python3.9 audio.py 
+User = <USER>
+Group = <USERGROUPs>          
+Restart =on-failure 
+SyslogIdentifier = test                          
+RestartSec = 5
+TimeoutStartSec = infinity
+Environment=PYTHONUNBUFFERED=1 
+[Install]
+WantedBy = multi-user.target

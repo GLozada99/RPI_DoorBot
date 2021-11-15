@@ -1,0 +1,4 @@
+Paste files on "services" directory into /etc/systemd/system
+
+To make usb speaker work RPi, do the following:
+    Open /etc/modprobe.d/raspi-blacklist.conf and add blacklist snd_bcm2835.
