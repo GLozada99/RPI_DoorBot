@@ -6,12 +6,12 @@ import functions as func
 
 
 async def main():
-    server = 'https://matrix-client.matrix.org'
-    user = '@tavo9:matrix.org'
-    password = 'O1KhpTBn7D47'
-    device_id = 'LYTVJFQRJG'
-    room = '#speaker:matrix.org'
-
+    server = config('MATRIX_SERVER')
+    user = config('MATRIX_USER')
+    password = config('MATRIX_PASSWORD')
+    device_id = config('MATRIX_DEVICE_ID')
+    room = config('MATRIX_ROOM_NAME_SPEAKER')
+    
     client_task = asyncio.create_task(
         mx.matrix_login(server, user, password, device_id))
     client = await client_task

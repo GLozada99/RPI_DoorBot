@@ -21,12 +21,12 @@ async def main():
     good_temp_flag = True
     temp_offset = 1.8
 
-    server = 'https://matrix-client.matrix.org'
-    user = '@tavo9:matrix.org'
-    password = 'O1KhpTBn7D47'
-    room = '#temper:matrix.org'
-    device_id = 'QXWVUANCNW'
-
+    server = config('MATRIX_SERVER')
+    user = config('MATRIX_USER')
+    password = config('MATRIX_PASSWORD')
+    device_id = config('MATRIX_DEVICE_ID')
+    room = config('MATRIX_ROOM_NAME_TEMPERATURE')
+    
     client_task = asyncio.create_task(
         mx.matrix_login(server, user, password, device_id))
     client = await client_task
