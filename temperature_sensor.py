@@ -3,6 +3,7 @@ from smbus2 import SMBus
 from mlx90614 import MLX90614
 from time import sleep, time
 import asyncio
+from decouple import config
 import matrix_functions as mx
 import functions as fc
 

@@ -1,4 +1,6 @@
 Paste files on "services" directory into /etc/systemd/system
 
+Create a .env file and add the enviromental variables used in the project
+
 To make usb speaker work RPi, do the following:
     Open /etc/modprobe.d/raspi-blacklist.conf and add blacklist snd_bcm2835.
