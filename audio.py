@@ -29,7 +29,6 @@ async def main():
             mx.matrix_get_messages(client, room_id, limit=2))
         room_msgs = await room_msg_task
         if room_msgs:
-
             for room_msg in room_msgs:
                 msg, timestamp, msg_id = room_msg
                 if not (msg_id in last_msg_ids or func.has_time_passed(timestamp, 20)):
@@ -39,7 +38,7 @@ async def main():
         for name in messages:
             try:
                 proc = subprocess.Popen(
-                    f'aplay --device=hw:1,0 ./Audio/{name}.wav'.split())
+                    f'aplay ./Audio/{name}.wav'.split())
                 proc.wait()
             except Exception as e:
                 print(e)
