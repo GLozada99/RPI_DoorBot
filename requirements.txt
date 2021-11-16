@@ -1,0 +1,7 @@
+Adafruit_GPIO==1.0.3
+Adafruit_SSD1306==1.6.2
+gpiozero==1.6.2
+nio==3.4.2
+Pillow==8.4.0
+python-decouple==3.5
+smbus2==0.4.1
