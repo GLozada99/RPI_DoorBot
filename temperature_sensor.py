@@ -6,6 +6,7 @@ import asyncio
 from decouple import config
 import matrix_functions as mx
 import functions as fc
+import temp_screen as ts
 
 
 async def main():
@@ -49,12 +50,13 @@ async def main():
                 led_yellow.off()
                 led_green.off()  
             elif not good_temp_flag:
-                avg_temp = round(sum(data)/len(data), 2)
+                avg_temp = round(sum(data)/len(data), 1)
                 avg_temp += temp_offset
                 good_temp_flag = True
                 msg = f'La temperatura es: {avg_temp}, puede retirar la mano'
                 print(msg)
                 await mx.matrix_send_message(client, room_id, str(avg_temp))
+                ts.temp_text(avg_temp)
                 led_green.on()
                 led_blue.off()
                 led_yellow.off()
