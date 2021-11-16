@@ -1,0 +1,15 @@
+[Unit]
+Description = RSTP to WebSocket using Express    
+After = network.target
+[Service]
+Type = simple
+WorkingDirectory= </path/to/project/>
+ExecStart = /usr/bin/node /home/sawrpi/camera/app.js 
+User = <USER>
+Group = <USERGROUPs>          
+Restart =on-failure 
+SyslogIdentifier = test                          
+RestartSec = 5
+TimeoutStartSec = infinity
+[Install]
+WantedBy = multi-user.target
