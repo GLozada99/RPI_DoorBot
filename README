@@ -4,3 +4,10 @@ Create a .env file and add the enviromental variables used in the project
 
 To make usb speaker work RPi, do the following:
     Open /etc/modprobe.d/raspi-blacklist.conf and add blacklist snd_bcm2835.
+
+If using Manjaro ARM, install yay and then use it to install raspi-config:
+    https://www.tecmint.com/install-yay-aur-helper-in-arch-linux-and-manjaro/ (install yay)
+    yay -S raspi-config (install raspi-config)
+Use raspi-config to activate i2c
+Install i2ctools:
+    sudo pacman -S i2c-tools
