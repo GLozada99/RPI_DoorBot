@@ -36,11 +36,11 @@ async def main():
                 if not (msg_id in last_msg_ids or func.has_time_passed(timestamp, 20)):
                     last_msg_ids.add(msg_id)
                     messages.extend(msg.split('\n'))
-
+                    messages = messages[0].split()
         for name in messages:
+            command = f'aplay ./Audio/{name}.wav' 
             try:
-                proc = subprocess.Popen(
-                    f'aplay ./Audio/{name}.wav'.split())
+                proc = subprocess.Popen(command.split())
                 proc.wait()
             except Exception as e:
                 print(e)
