@@ -38,6 +38,7 @@ async def main():
     room_id = await room_id_task
 
     yellow_time = time()
+    screen_time = time()
     YELLOW_TIME_INTERVAL = 3
     while True:     
         sleep(0.3)
@@ -72,6 +73,9 @@ async def main():
         
         if fc.has_time_passed(yellow_time, YELLOW_TIME_INTERVAL):
             led_yellow.off()
+
+        if fc.has_time_passed(screen_time, 5):
+            ts.blank()
 
 
 if __name__ == '__main__':

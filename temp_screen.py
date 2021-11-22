@@ -112,5 +112,10 @@ def temp_text(Tempe):
     disp.display()
     time.sleep(.1) 
 
+def blank():
+    draw.rectangle((0,0,width,height), outline=0, fill=0)
+    disp.image(image)
+    disp.display()
+
 if __name__ == '__main__':
     temp_text(22)
