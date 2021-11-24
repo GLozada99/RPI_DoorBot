@@ -13,6 +13,7 @@ async def main():
     password = config('MATRIX_PASSWORD')
     device_id = config('MATRIX_DEVICE_ID')
     room = config('MATRIX_ROOM_NAME_SPEAKER')
+    lang_room = config('MATRIX_ROOM_NAME_LANGUAGE')
     
     client_task = asyncio.create_task(
         mx.matrix_login(server, user, password, device_id))
@@ -22,14 +23,25 @@ async def main():
         mx.matrix_get_room_id(client, room))
     room_id = await room_id_task1
 
+    lang_id_task = asyncio.create_task(mx.matrix_get_room_id(client, lang_room))
+    lang_id = await lang_id_task
+
     proc = subprocess.Popen(['true'])
     last_msg_ids = set()
     messages = []
+    langu = ""
     while True:
         msg = ''
         room_msg_task = asyncio.create_task(
             mx.matrix_get_messages(client, room_id, limit=2))
         room_msgs = await room_msg_task
+
+        lang_room_task = asyncio.create_task(
+            mx.matrix_get_messages(client, lang_id))
+
+        if (func.has_time_passed(timestamp, 10)):
+            langu = await lang_room_task
+
         if room_msgs:
             for room_msg in room_msgs:
                 msg, timestamp, msg_id = room_msg
@@ -38,7 +50,7 @@ async def main():
                     messages.extend(msg.split('\n'))
                     messages = messages[0].split()
         for name in messages:
-            command = f'aplay ./Audio/{name}.wav' 
+            command = f'aplay ./Audio/{langu}/{name}.wav' 
             try:
                 proc = subprocess.Popen(command.split())
                 proc.wait()
