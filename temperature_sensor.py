@@ -58,6 +58,7 @@ async def main():
                 print(msg)
                 await mx.matrix_send_message(client, room_id, str(avg_temp))
                 ts.temp_text(avg_temp)
+                screen_time = time()
                 led_green.on()
                 led_blue.off()
                 led_yellow.off()
