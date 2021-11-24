@@ -1,6 +1,7 @@
 import subprocess
 
 import asyncio
+import time
 from decouple import config
 
 import matrix_functions as mx
@@ -30,6 +31,7 @@ async def main():
     last_msg_ids = set()
     messages = []
     langu = ""
+    last_time_lang = 0
     while True:
         msg = ''
         room_msg_task = asyncio.create_task(
@@ -39,8 +41,9 @@ async def main():
         lang_room_task = asyncio.create_task(
             mx.matrix_get_messages(client, lang_id))
 
-        if (func.has_time_passed(timestamp, 10)):
+        if (func.has_time_passed(last_time_lang, 10)):
             langu = await lang_room_task
+            last_time_lang = time.time()
 
         if room_msgs:
             for room_msg in room_msgs:
