@@ -43,7 +43,9 @@ async def main():
 
         if (func.has_time_passed(last_time_lang, 10)):
             langu = await lang_room_task
-            last_time_lang = time.time()
+            if langu:
+                langu = langu[0]
+                last_time_lang = time.time()
 
         if room_msgs:
             for room_msg in room_msgs:
