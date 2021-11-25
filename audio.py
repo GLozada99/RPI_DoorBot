@@ -44,7 +44,8 @@ async def main():
         if (func.has_time_passed(last_time_lang, 10)):
             langu = await lang_room_task
             if langu:
-                langu = langu[0]
+                langu = langu[0][0]
+                print(langu)
                 last_time_lang = time.time()
 
         if room_msgs:
@@ -56,6 +57,7 @@ async def main():
                     messages = messages[0].split()
         for name in messages:
             command = f'aplay ./Audio/{langu}/{name}.wav' 
+            print(command)
             try:
                 proc = subprocess.Popen(command.split())
                 proc.wait()
