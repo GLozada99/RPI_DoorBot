@@ -52,9 +52,12 @@ async def main():
             for room_msg in room_msgs:
                 msg, timestamp, msg_id = room_msg
                 if not (msg_id in last_msg_ids or func.has_time_passed(timestamp, 20)):
+                    msgs = msg.split('\n')
+                    
                     last_msg_ids.add(msg_id)
-                    messages.extend(msg.split('\n'))
-                    messages = messages[0].split()
+                    messages += msgs
+                    #messages = messages[0].split()
+        print(messages)
         for name in messages:
             command = f'aplay ./Audio/{langu}/{name}.wav' 
             print(command)
