@@ -1,5 +1,5 @@
 from nio import AsyncClient
-
+from nio.events.room_events import RoomMessageText
 
 async def matrix_login(server, user, password, device_id=None):
     if device_id:
@@ -31,10 +31,12 @@ async def matrix_get_messages(client, room_id, limit=1):
     messages = []
     response = await client.room_messages(room_id, client.next_batch, limit=limit)
     for eve in response.chunk:
-        msg = eve.body
-        timestamp_miliseconds = int(eve.server_timestamp)
-        timestamp_seconds = float(timestamp_miliseconds / 1000)
-        messages.append((msg, timestamp_seconds, eve.event_id))
+        print(eve)
+        if isinstance(eve, RoomMessageText):
+            msg = eve.body
+            timestamp_miliseconds = int(eve.server_timestamp)
+            timestamp_seconds = float(timestamp_miliseconds / 1000)
+            messages.append((msg, timestamp_seconds, eve.event_id))
 
     return messages
 
