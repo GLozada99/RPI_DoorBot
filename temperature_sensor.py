@@ -39,7 +39,7 @@ async def main():
 
     yellow_time = time()
     screen_time = time()
-    YELLOW_TIME_INTERVAL = 3
+    YELLOW_TIME_INTERVAL = 1
     while True:     
         sleep(0.3)
         print(dist_sensor.distance)
@@ -68,7 +68,13 @@ async def main():
             print('Superficie retirada, toma de temperatura detenida')
             good_temp_flag = True
             led_yellow.on()
-            yellow_time = time()  
+            yellow_time = time()
+            
+            while not fc.has_time_passed(yellow_time, YELLOW_TIME_INTERVAL):
+                led_blue.off()
+                sleep(0.05)
+                led_blue.on()
+                sleep(0.05)
         led_blue.off()
         led_green.off() 
         data.clear()
