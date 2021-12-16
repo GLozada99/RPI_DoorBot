@@ -16,7 +16,7 @@ async def main():
     temp_sensor = MLX90614(bus, address=0x5A)
 
     dist_sensor = DistanceSensor(
-        echo=13, trigger=6, threshold_distance=0.25)
+        echo=16, trigger=12, threshold_distance=0.25)
     led_blue = LED(23)
     led_yellow = LED(24)
     led_green = LED(25)
