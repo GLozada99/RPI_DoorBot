@@ -6,7 +6,7 @@ import asyncio
 from decouple import config
 import matrix_functions as mx
 import functions as fc
-import temp_screen as ts
+import screen as ts
 
 
 async def main():
@@ -16,7 +16,7 @@ async def main():
     temp_sensor = MLX90614(bus, address=0x5A)
 
     dist_sensor = DistanceSensor(
-        echo=27, trigger=22, threshold_distance=0.2)
+        echo=13, trigger=6, threshold_distance=0.25)
     led_blue = LED(23)
     led_yellow = LED(24)
     led_green = LED(25)
@@ -39,17 +39,18 @@ async def main():
 
     yellow_time = time()
     screen_time = time()
-    YELLOW_TIME_INTERVAL = 3
+    YELLOW_TIME_INTERVAL = 1
     while True:     
         sleep(0.3)
+        print(dist_sensor.distance)
         if dist_sensor.distance < dist_sensor.threshold_distance:
             if len(data) != 5:
                 data.add(temp_sensor.get_object_1())
                 print(f'Dato {len(data)}/5')
                 good_temp_flag = False
                 led_blue.on()
-                led_yellow.off()
-                led_green.off()  
+                led_yellow.on()
+                led_green.on()  
             elif not good_temp_flag:
                 avg_temp = round(sum(data)/len(data), 1)
                 avg_temp += temp_offset
@@ -67,7 +68,13 @@ async def main():
             print('Superficie retirada, toma de temperatura detenida')
             good_temp_flag = True
             led_yellow.on()
-            yellow_time = time()  
+            yellow_time = time()
+            
+            while not fc.has_time_passed(yellow_time, YELLOW_TIME_INTERVAL):
+                led_blue.off()
+                sleep(0.05)
+                led_blue.on()
+                sleep(0.05)
         led_blue.off()
         led_green.off() 
         data.clear()

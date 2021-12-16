@@ -40,9 +40,9 @@ async def main():
 
         lang_room_task = asyncio.create_task(
             mx.matrix_get_messages(client, lang_id))
-
         if (func.has_time_passed(last_time_lang, 10)):
             langu = await lang_room_task
+            print(langu)
             if langu:
                 langu = langu[0][0]
                 print(langu)
