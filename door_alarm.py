@@ -38,7 +38,8 @@ async def main():
                 await mx.matrix_send_message(alarm, room_id, 'ALARM')
                 print('alarm')
         elif not time_flag:
-            await mx.matrix_send_message(alarm, room_id, 'STOP')
+            if func.has_time_passed(time_msg, 1):
+                await mx.matrix_send_message(alarm, room_id, 'STOP')
             time_flag = True
         
 if __name__ == '__main__':
