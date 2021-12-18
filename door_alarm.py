@@ -12,7 +12,7 @@ async def main():
     user = config('MATRIX_USER')
     password = config('MATRIX_PASSWORD')
     device_id = config('MATRIX_DEVICE_ID')
-    room = config('MATRIX_ROOM_NAME_SPEAKER')
+    room = config('MATRIX_ROOM_NAME_ALARM')
     el_pin = Button(17, pull_up=False)
 
     alarm_task = asyncio.create_task(
@@ -26,21 +26,20 @@ async def main():
     other_flag = True
 
     while True:
-        #time.sleep(1)
-        #has_time_passed para enviar el mensaje, no se puede parar como un mojiganga el programa
-        if el_pin.is_active: #la puerta se abrio
+        time.sleep(1)
+        if not el_pin.is_active:
             if time_flag:
                 time_msg = time.time()
                 time_flag = False
                 other_flag = True
-            if func.has_time_passed(time_msg, 5) and other_flag:
+            if func.has_time_passed(time_msg, 15) and other_flag:
                 other_flag = False
                 await mx.matrix_send_message(alarm, room_id, 'ALARM')
                 print('alarm')
-        elif not time_flag:
-            if func.has_time_passed(time_msg, 1):
-                await mx.matrix_send_message(alarm, room_id, 'STOP')
+        elif not time_flag and not other_flag:
+            await mx.matrix_send_message(alarm, room_id, 'STOP')
             time_flag = True
+            print('stop')
         
 if __name__ == '__main__':
     asyncio.run(main())
