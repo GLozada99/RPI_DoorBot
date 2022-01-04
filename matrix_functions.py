@@ -31,7 +31,6 @@ async def matrix_get_messages(client, room_id, limit=1):
     messages = []
     response = await client.room_messages(room_id, client.next_batch, limit=limit)
     for eve in response.chunk:
-        print(eve)
         if isinstance(eve, RoomMessageText):
             msg = eve.body
             timestamp_miliseconds = int(eve.server_timestamp)

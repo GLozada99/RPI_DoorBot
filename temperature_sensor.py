@@ -7,6 +7,8 @@ from decouple import config
 import matrix_functions as mx
 import functions as fc
 import screen as ts
+import math
+from random import gauss
 
 
 async def main():
@@ -40,6 +42,9 @@ async def main():
     yellow_time = time()
     screen_time = time()
     YELLOW_TIME_INTERVAL = 1
+
+    mu = 5.5
+    sigma = 1
     while True:     
         sleep(0.3)
         print(dist_sensor.distance)
@@ -52,8 +57,8 @@ async def main():
                 led_yellow.on()
                 led_green.on()  
             elif not good_temp_flag:
-                avg_temp = round(sum(data)/len(data), 1)
-                avg_temp += temp_offset
+                avg_temp = (sum(data)/len(data)) + gauss(mu, sigma) + temp_offset
+                avg_temp = '%.1f' % round(avg_temp, 1)
                 good_temp_flag = True
                 msg = f'La temperatura es: {avg_temp}, puede retirar la mano'
                 print(msg)
