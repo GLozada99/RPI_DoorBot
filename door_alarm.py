@@ -25,6 +25,8 @@ async def main():
     time_flag = True
     other_flag = True
 
+    ALARM_TIME = 30
+
     while True:
         time.sleep(1)
         if not el_pin.is_active:
@@ -32,7 +34,7 @@ async def main():
                 time_msg = time.time()
                 time_flag = False
                 other_flag = True
-            if func.has_time_passed(time_msg, 15) and other_flag:
+            if func.has_time_passed(time_msg, ALARM_TIME) and other_flag:
                 other_flag = False
                 await mx.matrix_send_message(alarm, room_id, 'ALARM')
                 print('alarm')
