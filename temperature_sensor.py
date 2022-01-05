@@ -43,8 +43,8 @@ async def main():
     screen_time = time()
     YELLOW_TIME_INTERVAL = 1
 
-    mu = 5.5
-    sigma = 1
+    mu = 5.1
+    sigma = 0.9
     while True:     
         sleep(0.3)
         print(dist_sensor.distance)

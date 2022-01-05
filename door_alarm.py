@@ -42,6 +42,8 @@ async def main():
             await mx.matrix_send_message(alarm, room_id, 'STOP')
             time_flag = True
             print('stop')
+        else:
+            time_msg = time.time()
         
 if __name__ == '__main__':
     asyncio.run(main())
